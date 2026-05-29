@@ -15,7 +15,8 @@ body { font-family: Arial; margin: 20px; }
 table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
 th, td { border: 1px solid #999; padding: 6px; text-align: center; }
 h2 { margin-top: 30px; }
-.partido { padding: 6px; border-bottom: 1px solid #ccc; }
+
+/* FORMATO DE PARTIDOS */
 .partido {
     display: grid;
     grid-template-columns: 1fr 40px 20px 40px 1fr;
@@ -34,7 +35,6 @@ h2 { margin-top: 30px; }
     text-align: center;
     font-weight: bold;
 }
-
 </style>
 </head>
 
@@ -129,7 +129,6 @@ function mostrarGrupos(grupos) {
 
     grupos.forEach(g => {
         let html = `<h3>Grupo ${g.nombre}</h3>`;
-
         g.partidos.forEach(p => {
             html += `
                 <div class="partido">
@@ -141,11 +140,9 @@ function mostrarGrupos(grupos) {
                 </div>
             `;
         });
-
         cont.innerHTML += html;
     });
 }
-
 
 function mostrarFase(id, partidos) {
     const cont = document.getElementById(id);
@@ -163,7 +160,6 @@ function mostrarFase(id, partidos) {
         `;
     });
 }
-
 
 function mostrarTabla(id, tabla) {
     let html = `
