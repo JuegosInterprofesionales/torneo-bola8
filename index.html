@@ -2,46 +2,104 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Torneo Bola 8 - Resultados</title>
+<title>Torneo Bola 8</title>
 <link rel="stylesheet" href="estilos.css">
+
+<style>
+body { font-family: Arial; margin: 20px; }
+.tabs { display: flex; gap: 20px; margin-bottom: 20px; }
+.tab { cursor: pointer; padding: 10px 20px; background: #ddd; border-radius: 5px; }
+.tab.active { background: #4CAF50; color: white; }
+.section { display: none; }
+.section.active { display: block; }
+table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+th, td { border: 1px solid #999; padding: 6px; text-align: center; }
+h2 { margin-top: 30px; }
+.partido { padding: 6px; border-bottom: 1px solid #ccc; }
+</style>
 </head>
 
 <body>
 
 <h1>Torneo de Bola 8</h1>
-<h2>Resultados y Tabla de Posiciones</h2>
 
-<div id="error" style="color: red; text-align:center;"></div>
+<div class="tabs">
+    <div class="tab active" onclick="mostrar('partidos')">PARTIDOS</div>
+    <div class="tab" onclick="mostrar('tablas')">TABLAS</div>
+</div>
 
-<div id="grupos"></div>
+<div id="error" style="color:red; text-align:center;"></div>
 
-<h2>Fase Eliminatoria</h2>
+<!-- ===================== -->
+<!--     SECCIÓN PARTIDOS  -->
+<!-- ===================== -->
+<div id="partidos" class="section active">
 
-<div id="cuartos" class="fase"></div>
-<div id="semifinal" class="fase"></div>
-<div id="final" class="fase"></div>
+    <h2>Grupos</h2>
+    <div id="grupos"></div>
+
+    <h2>Cuartos de Final</h2>
+    <div id="cuartos"></div>
+
+    <h2>Semifinales</h2>
+    <div id="semifinales"></div>
+
+    <h2>Final</h2>
+    <div id="final"></div>
+
+</div>
+
+<!-- ===================== -->
+<!--     SECCIÓN TABLAS    -->
+<!-- ===================== -->
+<div id="tablas" class="section">
+
+    <h2>Tabla Grupo A</h2>
+    <div id="tablaA"></div>
+
+    <h2>Tabla Grupo B</h2>
+    <div id="tablaB"></div>
+
+    <h2>Tabla Grupo C</h2>
+    <div id="tablaC"></div>
+
+    <h2>Tabla Grupo D</h2>
+    <div id="tablaD"></div>
+
+</div>
 
 <script>
+function mostrar(id) {
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    event.target.classList.add("active");
+}
+
 async function cargarDatos() {
     try {
         const resp = await fetch("resultados.json");
-
         if (!resp.ok) {
-            document.getElementById("error").innerHTML =
-                "No se pudo cargar resultados.json";
+            document.getElementById("error").innerHTML = "No se pudo cargar resultados.json";
             return;
         }
 
         const data = await resp.json();
 
-        mostrarGrupos(data.grupos);
-        mostrarFase("cuartos", data.cuartos);
-        mostrarFase("semifinal", data.semifinales);
-        mostrarFase("final", data.final);
+        // PARTIDOS
+        mostrarGrupos(data.partidos.grupos);
+        mostrarFase("cuartos", data.partidos.cuartos);
+        mostrarFase("semifinales", data.partidos.semifinales);
+        mostrarFase("final", data.partidos.final);
+
+        // TABLAS
+        mostrarTabla("tablaA", data.tablas.A);
+        mostrarTabla("tablaB", data.tablas.B);
+        mostrarTabla("tablaC", data.tablas.C);
+        mostrarTabla("tablaD", data.tablas.D);
 
     } catch (e) {
-        document.getElementById("error").innerHTML =
-            "Error cargando datos: " + e;
+        document.getElementById("error").innerHTML = "Error cargando datos: " + e;
     }
 }
 
@@ -50,47 +108,22 @@ function mostrarGrupos(grupos) {
     cont.innerHTML = "";
 
     grupos.forEach(g => {
-        let html = `
-            <div class="grupo">
-                <h2>Grupo ${g.nombre}</h2>
-                <table>
-                    <tr>
-                        <th>Jugador</th>
-                        <th>PJ</th>
-                        <th>PG</th>
-                        <th>PE</th>
-                        <th>PP</th>
-                        <th>PF</th>
-                        <th>PC</th>
-                        <th>PTS</th>
-                        <th>PD</th>
-                    </tr>
-        `;
-
-        g.tabla.forEach(t => {
+        let html = `<h3>Grupo ${g.nombre}</h3>`;
+        g.partidos.forEach(p => {
             html += `
-                <tr>
-                    <td>${t.jugador}</td>
-                    <td>${t.pj}</td>
-                    <td>${t.pg}</td>
-                    <td>${t.pe}</td>
-                    <td>${t.pp}</td>
-                    <td>${t.pf}</td>
-                    <td>${t.pc}</td>
-                    <td>${t.pts}</td>
-                    <td>${t.pd}</td>
-                </tr>
+                <div class="partido">
+                    ${p.j1} <strong>${p.s1}</strong> vs 
+                    <strong>${p.s2}</strong> ${p.j2}
+                </div>
             `;
         });
-
-        html += `</table></div>`;
         cont.innerHTML += html;
     });
 }
 
 function mostrarFase(id, partidos) {
     const cont = document.getElementById(id);
-    cont.innerHTML = `<h2>${id.toUpperCase()}</h2>`;
+    cont.innerHTML = "";
 
     partidos.forEach(p => {
         cont.innerHTML += `
@@ -100,6 +133,37 @@ function mostrarFase(id, partidos) {
             </div>
         `;
     });
+}
+
+function mostrarTabla(id, tabla) {
+    let html = `
+        <table>
+            <tr>
+                <th>POS</th><th>GREMIO</th><th>PJ</th><th>PG</th><th>PE</th>
+                <th>PP</th><th>PF</th><th>PC</th><th>PTS</th><th>PD</th>
+            </tr>
+    `;
+
+    tabla.forEach(t => {
+        html += `
+            <tr>
+                <td>${t.pos}</td>
+                <td>${t.gremio}</td>
+                <td>${t.pj}</td>
+                <td>${t.pg}</td>
+                <td>${t.pe}</td>
+                <td>${t.pp}</td>
+                <td>${t.pf}</td>
+                <td>${t.pc}</td>
+                <td>${t.pts}</td>
+                <td>${t.pd}</td>
+            </tr>
+        `;
+    });
+
+    html += "</table>";
+
+    document.getElementById(id).innerHTML = html;
 }
 
 cargarDatos();
