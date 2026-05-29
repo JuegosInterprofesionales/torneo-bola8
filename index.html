@@ -113,7 +113,7 @@ function mostrarGrupos(grupos) {
         html += `
             <table>
                 <tr>
-                    <th>GREMIO</th><th>PG</th><th></th><th>PG</th><th>GREMIO</th>
+                    <th>GREMIO</th><th>PG</th><th>GREMIO</th><th>PG</th>
                 </tr>
         `;
 
@@ -121,10 +121,9 @@ function mostrarGrupos(grupos) {
             html += `
                 <tr>
                     <td>${p.j1}</td>
-                    <td>${p.s1 === "" ? "" : p.s1}</td>
-                    <td>|</td>
-                    <td>${p.s2 === "" ? "" : p.s2}</td>
+                    <td>${p.s1}</td>
                     <td>${p.j2}</td>
+                    <td>${p.s2}</td>
                 </tr>
             `;
         });
@@ -139,7 +138,7 @@ function mostrarFase(id, partidos) {
     let html = `
         <table>
             <tr>
-                <th>GREMIO</th><th>PG</th><th></th><th>PG</th><th>GREMIO</th>
+                <th>GREMIO</th><th>PG</th><th>GREMIO</th><th>PG</th>
             </tr>
     `;
 
@@ -147,10 +146,9 @@ function mostrarFase(id, partidos) {
         html += `
             <tr>
                 <td>${p.j1}</td>
-                <td>${p.s1 === "" ? "" : p.s1}</td>
-                <td>|</td>
-                <td>${p.s2 === "" ? "" : p.s2}</td>
+                <td>${p.s1}</td>
                 <td>${p.j2}</td>
+                <td>${p.s2}</td>
             </tr>
         `;
     });
