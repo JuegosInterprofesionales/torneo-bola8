@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Torneo Bola 8</title>
-<link rel="stylesheet" href="estilos.css">
 
 <style>
 body { font-family: Arial; margin: 20px; }
@@ -12,29 +11,11 @@ body { font-family: Arial; margin: 20px; }
 .tab.active { background: #4CAF50; color: white; }
 .section { display: none; }
 .section.active { display: block; }
-table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+
+table { border-collapse: collapse; width: 100%; margin-bottom: 25px; }
 th, td { border: 1px solid #999; padding: 6px; text-align: center; }
 h2 { margin-top: 30px; }
-
-/* FORMATO DE PARTIDOS */
-.partido {
-    display: grid;
-    grid-template-columns: 1fr 40px 20px 40px 1fr;
-    align-items: center;
-    padding: 6px 0;
-    border-bottom: 1px solid #ccc;
-    font-size: 16px;
-}
-
-.partido .pg {
-    text-align: center;
-    font-weight: bold;
-}
-
-.partido .sep {
-    text-align: center;
-    font-weight: bold;
-}
+h3 { margin-top: 20px; }
 </style>
 </head>
 
@@ -129,36 +110,53 @@ function mostrarGrupos(grupos) {
 
     grupos.forEach(g => {
         let html = `<h3>Grupo ${g.nombre}</h3>`;
+        html += `
+            <table>
+                <tr>
+                    <th>GREMIO</th><th>PG</th><th></th><th>PG</th><th>GREMIO</th>
+                </tr>
+        `;
+
         g.partidos.forEach(p => {
             html += `
-                <div class="partido">
-                    <span>${p.j1}</span>
-                    <span class="pg">${p.s1 === 0 ? "" : p.s1}</span>
-                    <span class="sep">|</span>
-                    <span class="pg">${p.s2 === 0 ? "" : p.s2}</span>
-                    <span>${p.j2}</span>
-                </div>
+                <tr>
+                    <td>${p.j1}</td>
+                    <td>${p.s1 === "" ? "" : p.s1}</td>
+                    <td>|</td>
+                    <td>${p.s2 === "" ? "" : p.s2}</td>
+                    <td>${p.j2}</td>
+                </tr>
             `;
         });
+
+        html += "</table>";
         cont.innerHTML += html;
     });
 }
 
 function mostrarFase(id, partidos) {
     const cont = document.getElementById(id);
-    cont.innerHTML = "";
+    let html = `
+        <table>
+            <tr>
+                <th>GREMIO</th><th>PG</th><th></th><th>PG</th><th>GREMIO</th>
+            </tr>
+    `;
 
     partidos.forEach(p => {
-        cont.innerHTML += `
-            <div class="partido">
-                <span>${p.j1}</span>
-                <span class="pg">${p.s1 === 0 ? "" : p.s1}</span>
-                <span class="sep">|</span>
-                <span class="pg">${p.s2 === 0 ? "" : p.s2}</span>
-                <span>${p.j2}</span>
-            </div>
+        html += `
+            <tr>
+                <td>${p.j1}</td>
+                <td>${p.s1 === "" ? "" : p.s1}</td>
+                <td>|</td>
+                <td>${p.s2 === "" ? "" : p.s2}</td>
+                <td>${p.j2}</td>
+            </tr>
         `;
     });
+
+    html += "</table>";
+    cont.innerHTML = html;
 }
 
 function mostrarTabla(id, tabla) {
